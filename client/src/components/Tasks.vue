@@ -15,13 +15,18 @@ const formatDate = (date) => {
   return new Date(date).toLocaleString();
 };
 
+const debugTask = index => {
+  console.log(tasks[index])
+  alert("Regarder dans la console");
+};  
+
 onMounted(() => {
   loadTasksFromSession();
 });
 </script>
 
 <template>
-  <div class="flex flex-col items-center gap-10">
+  <div class="flex flex-col items-center gap-10 w-80">
     <div class="flex justify-between items-center w-full">
       <h2 class="font-bold text-xl">Task list</h2>
       <RouterLink to="/add-task">
@@ -50,6 +55,12 @@ onMounted(() => {
             <td>
               <button class="btn btn-sm">...</button>
               <button class="btn btn-sm bg-red-500 text-white">X</button>
+              <button
+                @click="debugTask(index)"
+                class="btn btn-sm bg-yellow-500 text-white"
+              >
+                Débugger
+              </button>
             </td>
           </tr>
         </tbody>
