@@ -15,6 +15,11 @@ const formatDate = (date) => {
   return new Date(date).toLocaleString();
 };
 
+const deleteTask = (index) => {
+  tasks.value.splice(index, 1);
+  sessionStorage.setItem("tasks", JSON.stringify(tasks.value));
+};
+
 onMounted(() => {
   loadTasksFromSession();
 });
@@ -49,7 +54,12 @@ onMounted(() => {
             <td>{{ task.status }}</td>
             <td>
               <button class="btn btn-sm">...</button>
-              <button class="btn btn-sm bg-red-500 text-white">X</button>
+              <button
+                @click="deleteTask(index)"
+                class="btn btn-sm bg-red-500 text-white"
+              >
+                X
+              </button>
             </td>
           </tr>
         </tbody>
