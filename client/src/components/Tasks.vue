@@ -15,10 +15,15 @@ const formatDate = (date) => {
   return new Date(date).toLocaleString();
 };
 
-const debugTask = index => {
-  console.log(tasks[index])
+const debugTask = (index) => {
+  console.log(tasks[index]);
   alert("Regarder dans la console");
-};  
+};
+
+const deleteTask = (index) => {
+  tasks.value.splice(index, 1);
+  sessionStorage.setItem("tasks", JSON.stringify(tasks.value));
+};
 
 onMounted(() => {
   loadTasksFromSession();
@@ -26,7 +31,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center gap-10 w-80">
+  <div class="flex flex-col items-center gap-10 w-96">
     <div class="flex justify-between items-center w-full">
       <h2 class="font-bold text-xl">Task list</h2>
       <RouterLink to="/add-task">
@@ -52,14 +57,19 @@ onMounted(() => {
             <td>{{ task.description }}</td>
             <td>{{ formatDate(task.dueDate) }}</td>
             <td>{{ task.status }}</td>
-            <td>
-              <button class="btn btn-sm">...</button>
-              <button class="btn btn-sm bg-red-500 text-white">X</button>
+            <td class="flex">
+              <button class="btn btn-sm w-9">...</button>
               <button
                 @click="debugTask(index)"
-                class="btn btn-sm bg-yellow-500 text-white"
+                class="btn btn-sm w-9 bg-yellow-500 text-white"
               >
-                Débugger
+                ?
+              </button>
+              <button
+                @click="deleteTask(index)"
+                class="btn btn-sm w-9 bg-red-500 text-white"
+              >
+                X
               </button>
             </td>
           </tr>
