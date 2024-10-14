@@ -70,18 +70,18 @@ const handleSubmit = () => {
         <option>In Progress</option>
         <option>Completed</option>
       </select>
+    </div>
 
-      <div class="flex justify-between w-full">
-        <RouterLink to="/">
-          <button type="button" class="btn font-bold text-xl">← Home</button>
-        </RouterLink>
-        <button
-          type="submit"
-          class="btn bg-green-500 text-white font-bold text-xl"
-        >
-          Add Task
-        </button>
-      </div>
+    <div class="flex justify-between w-full">
+      <RouterLink to="/">
+        <button type="button" class="btn font-bold text-xl">← Home</button>
+      </RouterLink>
+      <button
+        type="submit"
+        class="btn bg-green-500 text-white font-bold text-xl"
+      >
+        Add Task
+      </button>
     </div>
   </form>
 </template>
