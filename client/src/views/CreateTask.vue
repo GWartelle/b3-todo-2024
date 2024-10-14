@@ -64,7 +64,7 @@ const handleSubmit = () => {
         placeholder="Due Date"
       />
 
-      <select v-model="taskStatus" class="select w-full max-w-sm">
+      <select v-model="taskStatus" class="select w-full">
         <option disabled value="">Select status</option>
         <option>To Do</option>
         <option>In Progress</option>
