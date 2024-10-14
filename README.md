@@ -2,7 +2,7 @@
 
 This app is built by [Gabriel Wartelle](https://github.com/GWartelle) with Vue.js, using Vite.js.
 
-## Instalation
+## Installation
 
 To install this project, you first need to clone it from the [repository](https://github.com/GWartelle/b3-todo-2024.git)
 
