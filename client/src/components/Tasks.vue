@@ -26,7 +26,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center gap-10 w-96">
+  <div class="flex flex-col items-left gap-10 min-w-96 max-w-3xl">
     <div class="flex justify-between items-center w-full">
       <h2 class="font-bold text-xl">Task list</h2>
       <RouterLink to="/add-task">
