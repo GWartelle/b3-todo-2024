@@ -2,6 +2,11 @@
 
 <template>
   <h1>B3 TODO</h1>
+  <p>You must do these:</p>
+  <ul>
+    <li>This task</li>
+    <li>This one too</li>
+  </ul>
 </template>
 
 <style scoped>
