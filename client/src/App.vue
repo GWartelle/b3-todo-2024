@@ -1,6 +1,10 @@
-<script setup></script>
+<script setup>
+import { RouterView } from "vue-router";
+</script>
 
 <template>
-  <h1 class="text-center">B3 TODO APP</h1>
-  <h3 class="text-center font-bold  text-4xl p-10">Développement assisté par Gabriel LEY 😎😎😎</h3>
+  <div class="flex flex-col items-center">
+    <h1 class="text-center font-bold text-4xl p-10">B3 TODO APP</h1>
+    <RouterView />
+  </div>
 </template>
