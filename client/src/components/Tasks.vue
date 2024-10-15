@@ -16,7 +16,7 @@ const formatDate = (date) => {
 };
 
 const debugTask = (index) => {
-  console.log(tasks[index]);
+  console.log(tasks.value[index]);
   alert("Regarder dans la console");
 };
 
