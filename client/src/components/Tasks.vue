@@ -58,7 +58,9 @@ onMounted(() => {
             <td>{{ formatDate(task.dueDate) }}</td>
             <td>{{ task.status }}</td>
             <td class="flex">
-              <button class="btn btn-sm w-9">...</button>
+              <RouterLink :to="{ name: 'edit-task', params: { index } }">
+                <button class="btn btn-sm w-9">...</button>
+              </RouterLink>
               <button
                 @click="debugTask(index)"
                 class="btn btn-sm w-9 bg-yellow-500 text-white"
