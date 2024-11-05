@@ -1,16 +1,24 @@
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, reactive } from "vue";
 import { RouterLink } from "vue-router";
+import axios from "axios";
 
-const tasks = ref([]);
-const sortOption = ref("dueDate"); // Default sort option: 'dueDate'
-const sortOrder = ref("asc"); // Default sort order: 'asc' (ascending)
+const state = reactive({
+  tasks: [],
+  isLoading: true,
+});
 
 // Load tasks from sessionStorage
-const loadTasksFromSession = () => {
-  const savedTasks = sessionStorage.getItem("tasks");
-  if (savedTasks) {
-    tasks.value = JSON.parse(savedTasks);
+const loadTasks = async () => {
+  try {
+    const response = await axios.get("http://127.0.0.1:3000/tasks/");
+    state.tasks = response.data;
+    console.log("This is the response data : ");
+    console.log(response.data);
+  } catch {
+    console.error("Error fetching tasks", error);
+  } finally {
+    state.isLoading = false;
   }
 };
 
@@ -19,45 +27,20 @@ const formatDate = (date) => {
   return new Date(date).toLocaleString();
 };
 
-// Debugging function to log task info
-const debugTask = (index) => {
-  console.log(tasks.value[index]);
-  alert("Check the console for details");
-};
-
 // Delete a task from the list
 const deleteTask = (index) => {
-  tasks.value.splice(index, 1);
-  sessionStorage.setItem("tasks", JSON.stringify(tasks.value));
+  alert("This will delete this task !");
 };
-
-// Computed property for sorted tasks
-const sortedTasks = computed(() => {
-  const sorted = tasks.value.slice().sort((a, b) => {
-    if (sortOption.value === "dueDate") {
-      return new Date(a.dueDate) - new Date(b.dueDate);
-    } else if (sortOption.value === "status") {
-      return a.status.localeCompare(b.status);
-    }
-    return 0; // Default to unsorted
-  });
-
-  // Apply descending order if selected
-  if (sortOrder.value === "desc") {
-    return sorted.reverse();
-  }
-
-  return sorted;
-});
 
 // Load tasks when component is mounted
 onMounted(() => {
-  loadTasksFromSession();
+  loadTasks();
+  console.log("These are the tasks : " + state.tasks);
 });
 </script>
 
 <template>
-  <div class="flex flex-col items-left gap-10 min-w-96 max-w-3xl">
+  <div class="flex flex-col items-left gap-10 min-w-96">
     <div class="flex justify-between items-center w-full">
       <h2 class="font-bold text-xl">Task list</h2>
       <RouterLink to="/add-task">
@@ -67,77 +50,38 @@ onMounted(() => {
       </RouterLink>
     </div>
 
-    <!-- Sort Options using DaisyUI Dropdown -->
-    <div class="flex justify-start gap-4">
-      <details class="dropdown">
-        <summary class="btn m-1">Sort Options</summary>
-        <ul
-          class="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
-        >
-          <li
-            @click="
-              sortOption = 'dueDate';
-              sortOrder = 'asc';
-            "
-          >
-            <a>Sort by Due Date (Asc)</a>
-          </li>
-          <li
-            @click="
-              sortOption = 'dueDate';
-              sortOrder = 'desc';
-            "
-          >
-            <a>Sort by Due Date (Desc)</a>
-          </li>
-          <li
-            @click="
-              sortOption = 'status';
-              sortOrder = 'asc';
-            "
-          >
-            <a>Sort by Status (Asc)</a>
-          </li>
-          <li
-            @click="
-              sortOption = 'status';
-              sortOrder = 'desc';
-            "
-          >
-            <a>Sort by Status (Desc)</a>
-          </li>
-        </ul>
-      </details>
-    </div>
-
-    <div v-if="sortedTasks.length" class="overflow-x-auto">
+    <div v-if="state.tasks.length" class="overflow-x-auto">
       <table class="table">
         <thead>
           <tr>
             <th>#</th>
-            <th>Task</th>
+            <th>Title</th>
+            <th>Done</th>
+            <th>Description</th>
             <th>Due Date</th>
-            <th>Status</th>
+            <th>Creation Date</th>
+            <th>Update Date</th>
+            <th>Type</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <!-- Display sorted tasks using sortedTasks computed property -->
-          <tr v-for="(task, index) in sortedTasks" :key="index">
-            <td>{{ index + 1 }}</td>
+          <!-- Display sorted tasks using state.tasks computed property -->
+          <tr v-for="(task, index) in state.tasks" :key="index">
+            <td>{{ task.id }}</td>
+            <td>{{ task.title }}</td>
+            <td>{{ task.done }}</td>
             <td>{{ task.description }}</td>
-            <td>{{ formatDate(task.dueDate) }}</td>
-            <td>{{ task.status }}</td>
+            <td>{{ task["due-date"] }}</td>
+            <td>{{ task["creation-date"] }}</td>
+            <td>{{ task["update-date"] }}</td>
+            <td>{{ task.type }}</td>
             <td class="flex">
               <RouterLink :to="{ name: 'edit-task', params: { index } }">
-                <button class="btn btn-sm w-9">...</button>
+                <button class="btn btn-sm w-9 bg-yellow-500 text-white">
+                  ...
+                </button>
               </RouterLink>
-              <button
-                @click="debugTask(index)"
-                class="btn btn-sm w-9 bg-yellow-500 text-white"
-              >
-                ?
-              </button>
               <button
                 @click="deleteTask(index)"
                 class="btn btn-sm w-9 bg-red-500 text-white"
