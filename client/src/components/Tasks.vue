@@ -41,7 +41,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex flex-col items-left gap-10 min-w-96">
+  <div class="flex flex-col items-center gap-10 min-w-96">
     <div class="flex justify-between items-center w-full">
       <h2 class="font-bold text-xl">Task list</h2>
       <RouterLink to="/add-task">
@@ -51,7 +51,7 @@ onMounted(() => {
       </RouterLink>
     </div>
 
-<!--    <div v-if="!state.isLoading">-->
+    <div v-if="!state.isLoading">
       <div v-if="state.tasks.length" class="overflow-x-auto">
         <table class="table">
           <thead>
@@ -95,10 +95,10 @@ onMounted(() => {
           </tbody>
         </table>
       </div>
-<!--    </div>-->
+    </div>
 
     <p v-else>No tasks yet</p>
 
-<!--    <div v-else class="loading"></div>-->
+    <div v-else class="loading loading-lg"></div>
   </div>
 </template>
