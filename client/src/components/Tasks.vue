@@ -74,9 +74,9 @@ onMounted(() => {
               <td>{{ task.title }}</td>
               <td>{{ task.done }}</td>
               <td>{{ task.description }}</td>
-              <td>{{ task["due-date"] }}</td>
-              <td>{{ task["creation-date"] }}</td>
-              <td>{{ task["update-date"] }}</td>
+              <td>{{ formatDate(task.dueDate) }}</td>
+              <td>{{ formatDate(task.createdAt) }}</td>
+              <td>{{ formatDate(task.updatedAt) }}</td>
               <td>{{ task.type }}</td>
               <td class="flex">
                 <RouterLink :to="{ name: 'edit-task', params: { index } }">
