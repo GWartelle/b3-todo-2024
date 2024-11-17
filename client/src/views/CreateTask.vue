@@ -1,45 +1,56 @@
 <script setup>
-import { ref } from "vue";
+import {onMounted, reactive} from "vue";
+import { useToast } from "vue-toastification";
 import { useRouter } from "vue-router";
+import axios from "axios";
 
-const newTask = ref("");
-const dueDate = ref("");
-const taskStatus = ref("");
 const router = useRouter();
+const toast = useToast();
 
-const handleSubmit = () => {
-  if (newTask.value.trim() === "") {
-    alert("Task description is required!");
-    return;
+const form = reactive({
+  newTaskTitle: "",
+  newTaskDescription: "",
+  newTaskDueDate: "",
+  newTaskTypeId: "",
+});
+
+const types = reactive({
+  types: [],
+  isLoading: true,
+})
+
+const handleSubmit = async () => {
+  const newTask = {
+    title: form.newTaskTitle,
+    description: form.newTaskDescription,
+    dueDate: form.newTaskDueDate,
+    TypeId: form.newTaskTypeId,
+  };
+
+  try {
+    await axios.post("http://127.0.0.1:3000/tasks", newTask);
+    toast.success("Task successfully created");
+    await router.push("/");
+  } catch (error) {
+    console.error("Error adding task", error);
+    toast.error("Task was not created");
   }
-
-  if (!dueDate.value) {
-    alert("Due date is required!");
-    return;
-  }
-
-  if (!taskStatus.value) {
-    alert("Task status is required!");
-    return;
-  }
-
-  const savedTasks = sessionStorage.getItem("tasks");
-  let tasks = savedTasks ? JSON.parse(savedTasks) : [];
-
-  tasks.push({
-    description: newTask.value,
-    dueDate: dueDate.value,
-    status: taskStatus.value,
-  });
-
-  sessionStorage.setItem("tasks", JSON.stringify(tasks));
-
-  newTask.value = "";
-  dueDate.value = "";
-  taskStatus.value = "";
-
-  router.push("/");
 };
+
+const loadTypes = async () => {
+  try {
+    const res = await axios.get("http://127.0.0.1:3000/types")
+    types.types = res.data.types;
+  } catch (error) {
+  console.error("Error fetching types", error);
+  } finally {
+    types.isLoading = false;
+  }
+}
+
+onMounted(() => {
+  loadTypes();
+})
 </script>
 
 <template>
@@ -51,24 +62,38 @@ const handleSubmit = () => {
 
     <div class="flex flex-col items-center w-96 gap-2">
       <input
-        v-model="newTask"
+        v-model="form.newTaskTitle"
         type="text"
         class="input w-full"
-        placeholder="Task Description"
+        placeholder="Task Title"
+        required
       />
 
       <input
-        v-model="dueDate"
+        v-model="form.newTaskDescription"
+        type="text"
+        class="input w-full"
+        placeholder="Task Description"
+        required
+      />
+
+      <input
+        v-model="form.newTaskDueDate"
         type="datetime-local"
         class="input w-full"
         placeholder="Due Date"
+        required
       />
 
-      <select v-model="taskStatus" class="select w-full">
-        <option disabled value="">Select status</option>
-        <option>To Do</option>
-        <option>In Progress</option>
-        <option>Completed</option>
+      <select v-model="form.newTaskTypeId" class="select w-full">
+        <option selected disabled>Select Type</option>
+        <option
+            v-for="(type, index) in types.types"
+            :key="index"
+            :value="type.id"
+        >
+          {{ type.title }}
+        </option>
       </select>
     </div>
 

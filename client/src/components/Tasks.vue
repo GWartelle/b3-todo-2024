@@ -10,31 +10,27 @@ const state = reactive({
   isLoading: true,
 });
 
-// Load tasks from sessionStorage
 const loadTasks = async () => {
   try {
     const response = await axios.get(`http://127.0.0.1:3000/tasks?tasksPerPage=${state.tasksPerPage}`);
     state.tasks = response.data.tasks;
     state.totalTasks = response.data.totalTasks;
     state.tasksPerPage = response.data.tasksPerPage;
-  } catch {
+  } catch (error) {
     console.error("Error fetching tasks", error);
   } finally {
     state.isLoading = false;
   }
 };
 
-// Format the due date to a readable string
 const formatDate = (date) => {
   return new Date(date).toLocaleString();
 };
 
-// Delete a task from the list
 const deleteTask = () => {
   alert("This will delete this task !");
 };
 
-// Load tasks when component is mounted
 onMounted(() => {
   loadTasks();
 });
