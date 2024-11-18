@@ -2,6 +2,9 @@
 import { onMounted, reactive } from "vue";
 import { RouterLink } from "vue-router";
 import axios from "axios";
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 const state = reactive({
   tasks: [],
@@ -27,8 +30,18 @@ const formatDate = (date) => {
   return new Date(date).toLocaleString();
 };
 
-const deleteTask = () => {
-  alert("This will delete this task !");
+const deleteTask = async (id) => {
+  try {
+    const confirm = window.confirm("Are you sure you want to delete this task?");
+    if (confirm) {
+      await axios.delete(`http://127.0.0.1:3000/tasks/${id}`);
+      toast.success("Task deleted successfully");
+      await loadTasks();
+    }
+  } catch (error) {
+    console.error("Error deleting task", error);
+    toast.error("Job not deleted");
+  }
 };
 
 onMounted(() => {
@@ -66,7 +79,7 @@ onMounted(() => {
           <tbody>
             <!-- Display sorted tasks using state.tasks computed property -->
             <tr v-for="(task, index) in state.tasks" :key="index">
-              <td>{{ task.id }}</td>
+              <td>{{ index + 1 }}</td>
               <td>{{ task.title }}</td>
               <td>{{ task.done }}</td>
               <td>{{ task.description }}</td>
@@ -81,7 +94,7 @@ onMounted(() => {
                   </button>
                 </RouterLink>
                 <button
-                  @click="deleteTask(index)"
+                  @click="deleteTask(task.id)"
                   class="btn btn-sm w-9 bg-red-500 text-white"
                 >
                   X
